@@ -1,71 +1,67 @@
-# QA Bootcamp Week 2 Starter
+# QA Bootcamp Week 2: Toolshop test suite
 
-This is the starting point for Week 2 of the QA bootcamp. During the week you will use it to practise:
-
-- TypeScript
-- Playwright (UI testing)
-- Postman (API testing)
-- The Toolshop REST API
-
-There are no tests in this repo. You will write them during the week.
+Playwright tests (UI and API) for the [Toolshop](https://practicesoftwaretesting.com) demo shop, written during Week 2 of the QA bootcamp.
 
 ## Prerequisites
 
-Install these before you start:
-
 - [Node.js](https://nodejs.org/) (the current LTS version)
 - [Git](https://git-scm.com/)
-- [VS Code](https://code.visualstudio.com/)
 
-## Setup
+## Run the suite in three steps
 
-Run these steps in order from a terminal.
+Run every command from the project folder (the one with `package.json`), not from `tests/`.
 
-1. Clone the repo and open the folder:
-
-   ```bash
-   git clone <repo-url>
-   cd qa-bootcamp-week2-starter
-   ```
-
-2. Install the dependencies:
+1. **Install** the dependencies and the Chromium browser:
 
    ```bash
    npm install
-   ```
-
-3. Install the Chromium browser for Playwright:
-
-   ```bash
    npx playwright install chromium
    ```
 
-4. Copy `.env.example` to `.env`:
+2. **Copy** `.env.example` to `.env`:
 
    ```bash
    cp .env.example .env
    ```
 
-   `.env` already contains the Toolshop website URL (`TOOLSHOP_URL`) and the Toolshop API URL (`TOOLSHOP_API_URL`). Only change them if your trainer gives you different URLs.
+   On Windows PowerShell use `Copy-Item .env.example .env`. You don't need to change anything in it.
 
-5. Check that your setup works:
+3. **Run** the tests:
 
    ```bash
-   npm run check
+   npm test
    ```
 
-   This sends a GET request to the Toolshop API's `/products` endpoint (no login needed). If everything is set up correctly, it prints your Node version, the HTTP status (200), the number of products, and a last line that says `PASS`.
+   All 7 tests should pass. To run one file, add its path, for example `npm test -- tests/api-cart.spec.ts`.
 
-> **Warning:** never commit `.env`. It is where your own settings and, later in the course, your secrets (keys, tokens, passwords) live. It is listed in `.gitignore` so Git ignores it. Do not remove it from there.
+> Never commit `.env`. It is listed in `.gitignore`; keep it there.
 
-## Folders
+## What's in the suite
 
-| Folder     | What it is for |
-|------------|----------------|
-| `tests/`   | Your Playwright tests. It is empty for now; you will add tests during the week. |
-| `scripts/` | Helper scripts. `check.ts` checks your setup and is run by `npm run check`. |
+| File | Type | What it checks |
+|------|------|----------------|
+| `tests/home-title.spec.ts` | UI | The home page has the expected title. |
+| `tests/search-pliers.spec.ts` | UI | Searching for "pliers" shows only products with "pliers" in the name. |
+| `tests/invalid-login.spec.ts` | UI | An invalid login shows "Invalid email or password". |
+| `tests/sort-price.spec.ts` | UI (page object) | Sorting by "Price (Low - High)" lists products in ascending price order (case EW-11). |
+| `tests/pages/ProductsPage.ts` | Page object | Locators and actions for the product list, used by `sort-price.spec.ts`. |
+| `tests/api-products.spec.ts` | API | `GET /products` returns 200 and a non-empty product list. |
+| `tests/api-cart.spec.ts` | API | Creates a cart, adds a product and checks the cart; an unknown cart id returns 404. Every cart a test creates is deleted afterwards, even if the test fails. |
+
+`features/cart.feature` describes the Toolshop cart flow in Given/When/Then. It is documentation only and is not automated. The optional Cucumber-js scenario was not done.
+
+## Debugging a failing test
+
+Record a trace and open it in the trace viewer:
+
+```bash
+npx playwright test tests/home-title.spec.ts --trace on
+npx playwright show-trace test-results/<test-folder>/trace.zip
+```
+
+The test output prints the exact `show-trace` command to use.
 
 ## Scripts
 
+- `npm test`: runs all Playwright tests in `tests/`.
 - `npm run check`: checks your `.env` and that you can reach the Toolshop API.
-- `npm test`: runs the Playwright tests in `tests/`.
