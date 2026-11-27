@@ -9,9 +9,9 @@ test("Drill: Save shows Saved", async ({ page }) => {
   await page.goto(pageUrl);
   await page.getByRole("button", { name: "Save" }).click();
 
-  // UNFIXED: guess how long the message takes, then read it once
-  await page.waitForTimeout(500);
+  // FIXED: no guessed wait. toHaveText keeps re-checking until the message
+  // appears (up to 5 s), so any delay from 0 to 1 second passes, and the test
+  // moves on as soon as "Saved" shows.
   // The status paragraph has no role or label, so it is located by its id
-  const text = await page.locator("#status").textContent();
-  expect(text).toBe("Saved");
+  await expect(page.locator("#status")).toHaveText("Saved");
 });
