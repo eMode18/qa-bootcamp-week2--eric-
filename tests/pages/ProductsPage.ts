@@ -10,8 +10,8 @@ export class ProductsPage {
   constructor(page: Page) {
     this.page = page;
     this.sortDropdown = page.getByRole("combobox", { name: "sort" });
-    // Prices have no ARIA role of their own, so use the site's test id
-    this.productPrices = page.locator('[data-test="product-price"]');
+    // Prices as the shopper sees them, e.g. "$14.15" (one per product card)
+    this.productPrices = page.getByText(/^\$\d+\.\d{2}$/);
   }
 
   async open() {
@@ -21,6 +21,11 @@ export class ProductsPage {
   // option is the visible label, e.g. "Price (Low - High)"
   async sortBy(option: string) {
     await this.sortDropdown.selectOption({ label: option });
+  }
+
+  // Click a page number in the pagination bar below the products
+  async goToPage(pageNumber: number) {
+    await this.page.getByRole("button", { name: `Page-${pageNumber}` }).click();
   }
 
   // Returns the shown prices as numbers, e.g. "$3.55" -> 3.55
