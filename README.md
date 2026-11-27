@@ -32,7 +32,7 @@ Run every command from the project folder (the one with `package.json`), not fro
    npm test
    ```
 
-   All 10 tests should pass. To run one file, add its path, for example `npm test -- tests/api-cart.spec.ts`.
+   All 11 tests should pass. To run one file, add its path, for example `npm test -- tests/api-cart.spec.ts`.
 
 > Never commit `.env`. It is listed in `.gitignore`; keep it there.
 
@@ -51,7 +51,9 @@ Run every command from the project folder (the one with `package.json`), not fro
 | `tests/capstone/c3-sort-by-price.spec.ts` | UI (page object) | Capstone C3: sorting by price is cheapest first, across pages 1 and 2. |
 | `tests/capstone/c4-add-to-cart.spec.ts` | API | Capstone C4: create a cart, add a product, check the cart; C5: an unknown cart returns 404. Uses `tests/helpers/cartApi.ts`. |
 
-The capstone case choices, test-design notes and trace diagnosis are in [CAPSTONE.md](CAPSTONE.md).
+| `tests/drill/save-message.spec.ts` | UI (local page) | Flakiness drill: the "Saved" message appears after a random delay; the test waits for it with `toHaveText`. |
+
+The capstone case choices, test-design notes, trace diagnosis, flakiness drill, reflection and feedback log are in [CAPSTONE.md](CAPSTONE.md).
 
 `features/cart.feature` describes the Toolshop cart flow in Given/When/Then. It is documentation only and is not automated. The optional Cucumber-js scenario was not done.
 
